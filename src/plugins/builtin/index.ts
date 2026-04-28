@@ -1,9 +1,14 @@
 import brewPlugin from "./brew";
 import npmPlugin from "./npm";
 import vscodePlugin from "./vscode";
-import { Plugin } from "../types";
+import gitPlugin from "./git";
+import type { Plugin } from "../types";
 
-const builtinPlugins: Plugin[] = [brewPlugin, npmPlugin, vscodePlugin];
+export const builtinPlugins: Plugin[] = [
+  brewPlugin,
+  npmPlugin,
+  vscodePlugin,
+  gitPlugin,
+];
 
-export default builtinPlugins;
-export { brewPlugin, npmPlugin, vscodePlugin };
+export { brewPlugin, npmPlugin, vscodePlugin, gitPlugin };
