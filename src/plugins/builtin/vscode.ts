@@ -19,6 +19,16 @@ export function getInstalledExtensions(): string[] {
   return output.split("\n").filter(Boolean);
 }
 
+/**
+ * Returns extensions present in `desired` but not in `installed`.
+ */
+export function getMissingExtensions(
+  desired: string[],
+  installed: Set<string>
+): string[] {
+  return desired.filter((ext) => !installed.has(ext));
+}
+
 const vscodePlugin: Plugin = {
   name: "vscode",
 
@@ -46,13 +56,17 @@ const vscodePlugin: Plugin = {
     }
 
     const installed = new Set(getInstalledExtensions());
+    const missing = getMissingExtensions(extensions, installed);
+
+    if (missing.length === 0) {
+      ctx.logger.info("vscode: all extensions already installed");
+      return;
+    }
+
     let count = 0;
 
-    for (const ext of extensions) {
-      if (installed.has(ext)) {
-        ctx.logger.info(`vscode: already installed ${ext}`);
-        continue;
-      }
+    for (const ext of missing) {
+      ctx.logger.info(`vscode: already installed ${ext}`);
       try {
         runCommand(`code --install-extension ${ext} --force`);
         ctx.logger.info(`vscode: installed ${ext}`);
